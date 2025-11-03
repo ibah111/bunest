@@ -3,6 +3,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { Logger } from '@nestjs/common';
 import { swaggerSetup } from './utils/swagger-setup';
+import { DOCS_PATH } from './consts/application';
 
 export const node_env: string = process.env.NODE_ENV || 'development';
 
@@ -23,6 +24,6 @@ async function bootstrap() {
       logger.log(`Application in ${node_env} mode`.green);
       break;
   }
-  console.log(await app.getUrl())
+  console.log((await app.getUrl()) + DOCS_PATH);
 }
 bootstrap();
