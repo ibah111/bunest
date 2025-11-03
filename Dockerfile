@@ -1,6 +1,6 @@
 FROM oven/bun:alpine AS base
 WORKDIR /usr/src/app
-COPY package.json bun.lockb ./
+COPY package.json bun.lock ./
 
 FROM base AS dev_deps
 RUN bun install --frozen-lockfile
