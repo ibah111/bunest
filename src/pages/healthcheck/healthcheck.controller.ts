@@ -1,5 +1,5 @@
 import { Controller, Get } from '@nestjs/common';
-import { AppPageService } from './app-page.service';
+import { AppPageService } from './healthcheck.service';
 
 @Controller()
 export class AppPageController {

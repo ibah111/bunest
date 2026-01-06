@@ -4,8 +4,8 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 export function swaggerSetup(app: INestApplication): void {
   const config = new DocumentBuilder()
-    .setTitle('My API')
-    .setDescription('NestJS + Sequelize Example API')
+    .setTitle('WSA Event service')
+    .setDescription('White Server Agent service for events')
     .setVersion('1.0')
     .build();
   const document = SwaggerModule.createDocument(app, config);

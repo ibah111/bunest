@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common';
-import { AppPageModule } from './app-page/app-page.module';
+import { AppPageModule } from './healthcheck/healthcheck.module';
+import { WsaModule } from './wsa/wsa.module';
 
 @Module({
-  imports: [AppPageModule],
+  imports: [AppPageModule, WsaModule],
 })
 export class PagesModule {}

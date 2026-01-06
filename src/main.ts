@@ -14,7 +14,7 @@ async function bootstrap() {
 
   swaggerSetup(app);
 
-  await app.listen(PORT);
+  await app.listen(PORT, '0.0.0.0');
 
   switch (node_env) {
     case 'production':
