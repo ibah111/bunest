@@ -10,7 +10,8 @@ export const node_env: string = process.env.NODE_ENV || 'development';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const logger = new Logger(bootstrap.name);
-  const PORT = process.env.PORT ?? 3000;
+  const PORT = process.env.PORT as unknown as number;
+  console.log(PORT);
 
   swaggerSetup(app);
 
