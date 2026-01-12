@@ -29,7 +29,8 @@
     "@nestjs/swagger": "^11",
     "colors": "^1.4.0",
     "reflect-metadata": "^0.2.2",
-    "rxjs": "^7.8.2"
+    "rxjs": "^7.8.2",
+    "swagger-ui-dist": "^5.31.0"
   },
   "devDependencies": {
     "@nestjs/cli": "^11",

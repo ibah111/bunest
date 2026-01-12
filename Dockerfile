@@ -16,6 +16,6 @@ COPY --from=build /usr/src/app/node_modules ./node_modules
 COPY --from=build /usr/src/app/dist ./dist
 COPY --from=build /usr/src/app/src ./src
 COPY --from=build /usr/src/app/tsconfig.json ./tsconfig.json
-RUN bun install swagger-ui-dist --no-save
+# RUN bun install swagger-ui-dist --no-save
 EXPOSE ${PORT}
 CMD ["bun", "start:prod"]
