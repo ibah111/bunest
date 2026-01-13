@@ -1,4 +1,11 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpCode,
+  HttpStatus,
+  Post,
+  Res,
+} from '@nestjs/common';
 import { WsaService } from './wsa.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import type { WsaInput } from './wsa.input';
@@ -17,8 +24,9 @@ export class WsaController {
   })
   @HttpCode(200)
   @Post('/event')
-  async handleEvent(@Body() body: WsaInput) {
-    await this.wsaService.eventHandler(body);
+  async handleEvent(@Body() body: WsaInput, @Res() res: Response) {
+    const headers = res.headers;
+    await this.wsaService.eventHandler(body, headers);
     return { success: true };
   }
 }

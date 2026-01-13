@@ -7,9 +7,10 @@ export class WsaService {
 
   constructor(private readonly wsaGateway: WsaGateway) {}
 
-  async eventHandler(body: any) {
+  async eventHandler(body: any, headers: any) {
     this.logger.verbose('Event handler touched');
-    console.log(body);
+    console.log('body'.yellow, body);
+    console.log('headers'.yellow, headers);
     try {
       const objectId = body?.responseEventCommon?.objectId;
 
