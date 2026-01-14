@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Headers,
   HttpCode,
   HttpStatus,
   Post,
@@ -22,11 +23,16 @@ export class WsaController {
     status: HttpStatus.OK,
     description: 'Event received',
   })
-  @HttpCode(200)
   @Post('/event')
-  async handleEvent(@Body() body: WsaInput, @Res() res: Response) {
-    const headers = res.headers;
-    await this.wsaService.eventHandler(body, headers);
+  async handleEvent(
+    @Body() body: WsaInput,
+    @Headers() headers: Record<string, string>,
+  ) {
+    try {
+      await this.wsaService.eventHandler(body, headers);
+    } catch (error) {
+      console.log('error'.red, error);
+    }
     return { success: true };
   }
 }

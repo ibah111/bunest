@@ -9,8 +9,9 @@ export class WsaService {
 
   async eventHandler(body: any, headers: any) {
     this.logger.verbose('Event handler touched');
-    console.log('body'.yellow, body);
     console.log('headers'.yellow, headers);
+    console.log('body'.yellow, body);
+    console.log(new Date().toISOString());
     try {
       const objectId = body?.responseEventCommon?.objectId;
 
