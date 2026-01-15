@@ -10,7 +10,7 @@ export class WsaService {
   async eventHandler(body: any, headers: any) {
     this.logger.verbose('Event handler touched');
     console.log('headers'.yellow, headers);
-    console.log('body'.yellow, body);
+    console.log('body'.yellow, JSON.stringify(body, null, 2));
     console.log(new Date().toISOString());
     try {
       const objectId = body?.responseEventCommon?.objectId;
@@ -19,7 +19,6 @@ export class WsaService {
 
       if (objectId) {
         this.wsaGateway.emitByObject(objectId, body);
-        this.logger.debug(`Событие отправлено для объекта: ${objectId}`);
       }
     } catch (error) {
       this.logger.error(`Ошибка при обработке события: ${error}`, error);
