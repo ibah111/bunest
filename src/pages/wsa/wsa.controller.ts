@@ -1,6 +1,14 @@
-import { Body, Controller, HttpStatus, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Headers,
+  HttpCode,
+  HttpStatus,
+  Post,
+  Res,
+} from '@nestjs/common';
 import { WsaService } from './wsa.service';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import type { WsaInput } from './wsa.input';
 
 @ApiTags('WSA')
@@ -8,13 +16,23 @@ import type { WsaInput } from './wsa.input';
 export class WsaController {
   constructor(private readonly wsaService: WsaService) {}
 
+  @ApiOperation({
+    summary: 'For WSA events',
+  })
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'Event received',
   })
   @Post('/event')
-  async getHello(@Body() body: object) {
-    await this.wsaService.eventHandler(body);
-    return HttpStatus.OK;
+  async handleEvent(
+    @Body() body: WsaInput,
+    @Headers() headers: Record<string, string>,
+  ) {
+    try {
+      await this.wsaService.eventHandler(body, headers);
+    } catch (error) {
+      console.log('error'.red, error);
+    }
+    return { success: true };
   }
 }
