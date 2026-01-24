@@ -3,7 +3,7 @@ WORKDIR /usr/src/app
 COPY package.json bun.lock ./
 
 FROM base AS dev_deps
-RUN bun install --frozen-lockfile
+RUN bun install --frozen-lockfile --ignore-scripts
 
 FROM base AS build
 COPY --from=dev_deps /usr/src/app/node_modules ./node_modules
