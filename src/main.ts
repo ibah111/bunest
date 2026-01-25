@@ -14,7 +14,7 @@ async function bootstrap() {
   console.log(PORT);
 
   swaggerSetup(app);
-
+  app.enableCors({ origin: '*' })
   await app.listen(PORT, '0.0.0.0');
 
   switch (node_env) {
