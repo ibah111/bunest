@@ -6,7 +6,7 @@ export class AppPageController {
   constructor(private readonly appService: AppPageService) {}
 
   @Get()
-  getHello(): string {
+  getHello(): { message: string } {
     return this.appService.getHello();
   }
 }
