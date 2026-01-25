@@ -14,7 +14,15 @@ async function bootstrap() {
   console.log(PORT);
 
   swaggerSetup(app);
-
+  app.enableCors({
+    origin: [
+      "http://localhost:3000",
+      "http://127.0.0.1:3000",
+    ],
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    exposedHeaders: ['Content-Disposition'],
+  });
   await app.listen(PORT, '0.0.0.0');
 
   switch (node_env) {
