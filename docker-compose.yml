@@ -3,29 +3,28 @@ version: "3.8"
 services:
   tips-app:
     build: .
+    container_name: tips-app
+    ports:
+      - "${PORT}:${PORT}"
     expose:
       - "${PORT}"
     environment:
       - NODE_ENV=production
       - PORT=${PORT}
-
     labels:
       - "traefik.enable=true"
-
-      # HTTPS роутер
       - "traefik.http.routers.tips.rule=Host(`${DOMAIN_NAME}`) && PathPrefix(`/precheck`)"
       - "traefik.http.routers.tips.entrypoints=websecure"
       - "traefik.http.routers.tips.tls=true"
       - "traefik.http.routers.tips.tls.certresolver=le"
       - "traefik.http.routers.tips.priority=1"
-
-      # Порт приложения внутри контейнера
       - "traefik.http.services.tips.loadbalancer.server.port=${PORT}"
-
-      # HTTP → HTTPS редирект
       - "traefik.http.routers.tips-http.rule=Host(`${DOMAIN_NAME}`) && PathPrefix(`/precheck`)"
       - "traefik.http.routers.tips-http.entrypoints=web"
       - "traefik.http.routers.tips-http.middlewares=redirect-to-https"
       - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
-
     restart: unless-stopped
+networks:
+  default:
+    external:
+      name: web
