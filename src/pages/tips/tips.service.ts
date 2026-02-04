@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import type { TipsInput } from "./tips.input";
+import type { ITipsInput, TipsInput } from "./tips.input";
 
 @Injectable()
 export class TipsService {
@@ -11,7 +11,7 @@ export class TipsService {
         <title>Tips</title>
         </head>
         <body>
-        <h1>Tips</h1>
+        <h1>Give ME MONEY</h1>
         <div>
         restraunt:${restraunt}
         waiter:${waiter}

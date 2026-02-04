@@ -1,6 +1,6 @@
 import { Controller, Get, HttpStatus, Query } from '@nestjs/common';
 import { TipsService } from './tips.service';
-import type { TipsInput } from './tips.input';
+import { TipsInput } from './tips.input';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Tips')
