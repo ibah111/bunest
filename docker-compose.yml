@@ -11,6 +11,8 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=${PORT}
+    networks:
+      - web
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.tips.rule=Host(`${DOMAIN_NAME}`) && PathPrefix(`/precheck`)"
@@ -25,6 +27,6 @@ services:
       - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
     restart: unless-stopped
 networks:
-  default:
-    external:
-      name: web
+  web:
+    external: true
+    name: web
