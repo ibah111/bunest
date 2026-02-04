@@ -11,21 +11,23 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=${PORT}
+    labels:
+    - "traefik.enable=true"
+    - "traefik.docker.network=web"
+    - "traefik.http.routers.tips-precheck.rule=Host(`${DOMAIN_NAME}`) && PathPrefix(`/precheck`)"
+    - "traefik.http.routers.tips-precheck.entrypoints=websecure"
+    - "traefik.http.routers.tips-precheck.tls=true"
+    - "traefik.http.routers.tips-precheck.tls.certresolver=le"
+    - "traefik.http.routers.tips-precheck.priority=100"
+    - "traefik.http.services.tips-precheck.loadbalancer.server.port=${PORT}"
+    - "traefik.http.routers.tips-precheck-http.rule=Host(`${DOMAIN_NAME}`) && PathPrefix(`/precheck`)"
+    - "traefik.http.routers.tips-precheck-http.entrypoints=web"
+    - "traefik.http.routers.tips-precheck-http.middlewares=redirect-to-https"
+    - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+    restart: unless-stopped
     networks:
       - web
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.tips.rule=Host(`${DOMAIN_NAME}`) && PathPrefix(`/precheck`)"
-      - "traefik.http.routers.tips.entrypoints=websecure"
-      - "traefik.http.routers.tips.tls=true"
-      - "traefik.http.routers.tips.tls.certresolver=le"
-      - "traefik.http.routers.tips.priority=1"
-      - "traefik.http.services.tips.loadbalancer.server.port=${PORT}"
-      - "traefik.http.routers.tips-http.rule=Host(`${DOMAIN_NAME}`) && PathPrefix(`/precheck`)"
-      - "traefik.http.routers.tips-http.entrypoints=web"
-      - "traefik.http.routers.tips-http.middlewares=redirect-to-https"
-      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
-    restart: unless-stopped
+      
 networks:
   web:
     external: true
