@@ -7,4 +7,18 @@ services:
       - '${PORT}:${PORT}'
     environment:
       - NODE_ENV=production
+    labels:
+      - "traefik.enable=true"
+
+      - "traefik.http.routers.site.rule=Host(`${DOMAIN_NAME}`) && PathPrefix(`/precheck`)"
+      - "traefik.http.routers.site.entrypoints=websecure"
+      - "traefik.http.routers.site.tls.certresolver=le"
+      - "traefik.http.services.site.loadbalancer.server.port=3000"
+
+      - "traefik.http.routers.site-http.rule=Host(`${DOMAIN_NAME}`) && PathPrefix(`/precheck`)"
+      - "traefik.http.routers.site-http.entrypoints=web"
+      - "traefik.http.routers.site-http.middlewares=redirect-to-https"
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+
+      - "traefik.http.routers.site.priority=1"
     restart: unless-stopped

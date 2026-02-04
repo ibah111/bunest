@@ -3,7 +3,7 @@ import { AppPageService } from './healthcheck.service';
 
 @Controller()
 export class AppPageController {
-  constructor(private readonly appService: AppPageService) {}
+  constructor(private readonly appService: AppPageService) { }
 
   @Get()
   getHello(): string {
