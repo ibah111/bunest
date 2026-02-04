@@ -22,5 +22,6 @@ export function swaggerSetup(app: INestApplication): void {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup(DOCS_PATH, app, document, {
     swaggerOptions: { persistAuthorization: true },
+    useGlobalPrefix: true
   });
 }
