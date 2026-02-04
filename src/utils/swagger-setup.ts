@@ -15,8 +15,8 @@ export function swaggerSetup(app: INestApplication): void {
   });
 
   const config = new DocumentBuilder()
-    .setTitle('WSA Event service')
-    .setDescription('White Server Agent service for events')
+    .setTitle('Test fot tips')
+    .setDescription('Tips microservice')
     .setVersion('1.0')
     .build();
   const document = SwaggerModule.createDocument(app, config);
