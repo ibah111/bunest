@@ -15,10 +15,10 @@ services:
       - "traefik.http.routers.site.tls.certresolver=le"
       - "traefik.http.services.site.loadbalancer.server.port=${PORT}"
 
-      - "traefik.http.routers.site-http.rule=Host(`${DOMAIN_NAME}`) && PathPrefix(`/precheck`)"
-      - "traefik.http.routers.site-http.entrypoints=web"
-      - "traefik.http.routers.site-http.middlewares=redirect-to-https"
-      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+      # - "traefik.http.routers.site-http.rule=Host(`${DOMAIN_NAME}`) && PathPrefix(`/precheck`)"
+      # - "traefik.http.routers.site-http.entrypoints=web"
+      # - "traefik.http.routers.site-http.middlewares=redirect-to-https"
+      # - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
 
       - "traefik.http.routers.site.priority=1"
     restart: unless-stopped
