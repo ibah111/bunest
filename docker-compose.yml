@@ -1,10 +1,27 @@
-version: '3.8'
-
 services:
   app:
-    build: .
-    ports:
-      - '${PORT}:${PORT}'
+    container_name: bunest-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: release
+    env_file:
+      - .env
     environment:
-      - NODE_ENV=production
+      NODE_ENV: production
+      PORT: ${PORT:-35700}
+    ports:
+      - '${PORT:-35700}:${PORT:-35700}'
     restart: unless-stopped
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'bun',
+          '-e',
+          "fetch(`http://127.0.0.1:$${process.env.PORT || 35700}/`).then((response) => process.exit(response.ok ? 0 : 1)).catch(() => process.exit(1))",
+        ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
