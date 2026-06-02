@@ -8,8 +8,9 @@ export function swaggerSetup(app: INestApplication): void {
   app.use((req: Request, _res: Response, next: NextFunction) => {
     const path = req.path ?? req.originalUrl ?? '';
     if (path.startsWith(DOCS_PATH)) {
-      const ua = req.get('User-Agent') ?? req.headers['user-agent'] ?? 'unknown';
-      logger.verbose("Swagger logs:")
+      const ua =
+        req.get('User-Agent') ?? req.headers['user-agent'] ?? 'unknown';
+      logger.verbose('Swagger logs:');
       console.log(`${req.method} ${path} | User-Agent: ${ua}`);
     }
     next();

@@ -4,10 +4,18 @@ await $`rm -rf dist`;
 
 const optionalRequirePackages = [
   'class-transformer',
+  'class-transformer/storage',
   'class-validator',
   '@nestjs/microservices',
   '@nestjs/websockets',
   '@fastify/static',
+];
+const externalPackages = [
+  'typeorm',
+  'pg',
+  'amqplib',
+  'grammy',
+  'https-proxy-agent',
 ];
 
 const result = await build({
@@ -18,14 +26,17 @@ const result = await build({
     syntax: true,
     whitespace: true,
   },
-  external: optionalRequirePackages.filter((pkg) => {
-    try {
-      require(pkg);
-      return false;
-    } catch (_) {
-      return true;
-    }
-  }),
+  external: [
+    ...externalPackages,
+    ...optionalRequirePackages.filter((pkg) => {
+      try {
+        require(pkg);
+        return false;
+      } catch (_) {
+        return true;
+      }
+    }),
+  ],
   splitting: true,
 });
 

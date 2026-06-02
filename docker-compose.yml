@@ -1,6 +1,6 @@
 services:
-  app:
-    container_name: bunest-app
+  producer:
+    container_name: bunest-producer
     build:
       context: .
       dockerfile: Dockerfile
@@ -9,9 +9,24 @@ services:
       - .env
     environment:
       NODE_ENV: production
+      APP_ROLE: api
       PORT: ${PORT:-35700}
+      DATABASE_ENABLED: 'true'
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USERNAME: ${POSTGRES_USER:-bunest}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:-bunest}
+      DB_NAME: ${POSTGRES_DB:-bunest}
+      RABBITMQ_ENABLED: 'true'
+      RABBITMQ_URL: amqp://${RABBITMQ_USER:-guest}:${RABBITMQ_PASSWORD:-guest}@rabbitmq:5672
+      TELEGRAM_ENABLED: 'false'
     ports:
       - '${PORT:-35700}:${PORT:-35700}'
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
     restart: unless-stopped
     healthcheck:
       test:
@@ -19,9 +34,79 @@ services:
           'CMD',
           'bun',
           '-e',
-          "fetch(`http://127.0.0.1:$${process.env.PORT || 35700}/`).then((response) => process.exit(response.ok ? 0 : 1)).catch(() => process.exit(1))",
+          'fetch(`http://127.0.0.1:$${process.env.PORT || 35700}/`).then((response) => process.exit(response.ok ? 0 : 1)).catch(() => process.exit(1))',
         ]
       interval: 30s
       timeout: 5s
       retries: 3
       start_period: 10s
+
+  consumer:
+    container_name: bunest-consumer
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: release
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: production
+      APP_ROLE: consumer
+      DATABASE_ENABLED: 'true'
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USERNAME: ${POSTGRES_USER:-bunest}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:-bunest}
+      DB_NAME: ${POSTGRES_DB:-bunest}
+      RABBITMQ_ENABLED: 'true'
+      RABBITMQ_URL: amqp://${RABBITMQ_USER:-guest}:${RABBITMQ_PASSWORD:-guest}@rabbitmq:5672
+      TELEGRAM_ENABLED: ${TELEGRAM_ENABLED:-false}
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN:-}
+      TELEGRAM_PROXY_URL: ${TELEGRAM_PROXY_URL:-}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    restart: unless-stopped
+
+  postgres:
+    container_name: bunest-postgres
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-bunest}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-bunest}
+      POSTGRES_DB: ${POSTGRES_DB:-bunest}
+    ports:
+      - '${POSTGRES_PORT:-5432}:5432'
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test:
+        [
+          'CMD-SHELL',
+          'pg_isready -U $${POSTGRES_USER:-bunest} -d $${POSTGRES_DB:-bunest}',
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  rabbitmq:
+    container_name: bunest-rabbitmq
+    image: rabbitmq:4-management-alpine
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER:-guest}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:-guest}
+    ports:
+      - '${RABBITMQ_PORT:-5672}:5672'
+      - '${RABBITMQ_MANAGEMENT_PORT:-15672}:15672'
+    healthcheck:
+      test: ['CMD', 'rabbitmq-diagnostics', '-q', 'ping']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+volumes:
+  postgres-data:
