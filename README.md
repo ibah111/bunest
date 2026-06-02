@@ -17,12 +17,11 @@ through grammY.
 
 Copy `.env.example` to `.env` and adjust values.
 
-Telegram delivery is enabled only when:
+Telegram delivery is enabled when:
 
 ```bash
 TELEGRAM_ENABLED=true
 TELEGRAM_BOT_TOKEN=<bot-token>
-TELEGRAM_PROXY_URL=http://user:password@proxy-host:3128
 ```
 
 When `TELEGRAM_ENABLED=false`, the consumer runs in dry-run mode and logs the

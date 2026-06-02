@@ -10,13 +10,7 @@ const optionalRequirePackages = [
   '@nestjs/websockets',
   '@fastify/static',
 ];
-const externalPackages = [
-  'typeorm',
-  'pg',
-  'amqplib',
-  'grammy',
-  'https-proxy-agent',
-];
+const externalPackages = ['typeorm', 'pg', 'amqplib', 'grammy'];
 
 const result = await build({
   entrypoints: ['./src/main.ts'],

@@ -54,9 +54,9 @@ export class NotificationProducerService {
     }
   }
 
-  async getAllQueued(): Promise<any> { 
-    return await this.eventsRepository.findAll(); 
-  }  
+  async getAllQueued(): Promise<any> {
+    return await this.eventsRepository.findAll();
+  }
 
   private toMessage(dto: CreateNotificationEventDto): NotificationEventMessage {
     const randomEventId = randomUUID();

@@ -1,7 +1,6 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import type { ConfigType } from '@nestjs/config';
-import { Bot, type BotConfig, type Context } from 'grammy';
-import { HttpsProxyAgent } from 'https-proxy-agent';
+import { Bot } from 'grammy';
 import { telegramConfig } from '@/config';
 import type { NotificationEventMessage } from '@/modules/notifications/notification-event.types';
 
@@ -34,7 +33,9 @@ export class TelegramService {
       );
     } catch (err) {
       const error = err instanceof Error ? err : new Error(String(err));
-      this.logger.error(`Failed to send Telegram notification for event ${event.eventId}: ${error.message}`);
+      this.logger.error(
+        `Failed to send Telegram notification for event ${event.eventId}: ${error.message}`,
+      );
     }
   }
 
@@ -43,16 +44,10 @@ export class TelegramService {
       return this.bot;
     }
 
-    const agent = new HttpsProxyAgent(this.config.proxyUrl);
-    const client = {
-      baseFetchConfig: {
-        agent,
-      },
-      timeoutSeconds: this.config.requestTimeoutSeconds,
-    } as unknown as NonNullable<BotConfig<Context>['client']>;
-
     this.bot = new Bot(this.config.botToken, {
-      client,
+      client: {
+        timeoutSeconds: this.config.requestTimeoutSeconds,
+      },
     });
 
     return this.bot;
@@ -75,7 +70,7 @@ export class TelegramService {
       .filter((line) => line !== '')
       .join('\n');
   }
-  
+
   #escapeTelegramHtml(value: string): string {
     return value
       .replaceAll('&', '&amp;')
@@ -83,4 +78,3 @@ export class TelegramService {
       .replaceAll('>', '&gt;');
   }
 }
-

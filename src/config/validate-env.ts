@@ -24,10 +24,7 @@ export function validateEnv(
   }
 
   if (normalized.TELEGRAM_ENABLED) {
-    requireValues(normalized, missing, [
-      'TELEGRAM_BOT_TOKEN',
-      'TELEGRAM_PROXY_URL',
-    ]);
+    requireValues(normalized, missing, ['TELEGRAM_BOT_TOKEN']);
   }
 
   if (!APP_ROLES.includes(normalized.APP_ROLE)) {
@@ -42,13 +39,6 @@ export function validateEnv(
     throw new Error(
       `Missing required environment variables: ${missing.join(', ')}`,
     );
-  }
-
-  if (
-    normalized.TELEGRAM_ENABLED &&
-    !/^https?:\/\//i.test(normalized.TELEGRAM_PROXY_URL ?? '')
-  ) {
-    throw new Error('TELEGRAM_PROXY_URL must start with http:// or https://');
   }
 
   return {
@@ -82,7 +72,6 @@ function normalize(config: Record<string, unknown>) {
     DB_NAME: env('DB_NAME'),
     RABBITMQ_URL: env('RABBITMQ_URL'),
     TELEGRAM_BOT_TOKEN: env('TELEGRAM_BOT_TOKEN'),
-    TELEGRAM_PROXY_URL: env('TELEGRAM_PROXY_URL'),
   };
 }
 

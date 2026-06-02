@@ -25,7 +25,6 @@ declare module 'bun' {
     RABBITMQ_CONSUMER_MAX_RETRIES?: string;
     TELEGRAM_ENABLED?: string;
     TELEGRAM_BOT_TOKEN?: string;
-    TELEGRAM_PROXY_URL?: string;
     TELEGRAM_REQUEST_TIMEOUT_SECONDS?: string;
   }
 }
