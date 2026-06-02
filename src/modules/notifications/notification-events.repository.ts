@@ -23,6 +23,7 @@ export interface NotificationEventsRepository {
   markProcessed(eventId: string): Promise<void>;
   markFailed(eventId: string, error: Error): Promise<void>;
   findByEventId(eventId: string): Promise<NotificationEventRecord | null>;
+  findAll(): Promise<NotificationEventRecord[]>;
 }
 
 export function InjectNotificationEventsRepository() {
@@ -122,6 +123,10 @@ export class TypeOrmNotificationEventsRepository
   ): Promise<NotificationEventRecord | null> {
     return this.repository.findOne({ where: { eventId } });
   }
+
+  async findAll(): Promise<NotificationEventRecord[]> {
+    return this.repository.find();
+  }
 }
 
 @Injectable()
@@ -208,5 +213,9 @@ export class InMemoryNotificationEventsRepository
     eventId: string,
   ): Promise<NotificationEventRecord | null> {
     return this.events.get(eventId) ?? null;
+  }
+
+  async findAll(): Promise<NotificationEventRecord[]> {
+    return Array.from(this.events.values());
   }
 }

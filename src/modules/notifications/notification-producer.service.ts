@@ -54,9 +54,15 @@ export class NotificationProducerService {
     }
   }
 
+  async getAllQueued(): Promise<any> { 
+    return await this.eventsRepository.findAll(); 
+  }  
+
   private toMessage(dto: CreateNotificationEventDto): NotificationEventMessage {
+    const randomEventId = randomUUID();
     return {
-      eventId: dto.eventId ?? randomUUID(),
+      // eventId: dto.eventId ?? randomUUID(),
+      eventId: randomEventId,
       type: dto.type,
       telegramChatId: dto.telegramChatId,
       message: dto.message,

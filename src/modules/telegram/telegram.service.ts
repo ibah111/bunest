@@ -23,14 +23,19 @@ export class TelegramService {
       return;
     }
 
-    await this.getBot().api.sendMessage(
-      event.telegramChatId,
-      this.formatMessage(event),
-      {
-        parse_mode: 'HTML',
-        link_preview_options: { is_disabled: true },
-      },
-    );
+    try {
+      await this.getBot().api.sendMessage(
+        event.telegramChatId,
+        this.formatMessage(event),
+        {
+          parse_mode: 'HTML',
+          link_preview_options: { is_disabled: true },
+        },
+      );
+    } catch (err) {
+      const error = err instanceof Error ? err : new Error(String(err));
+      this.logger.error(`Failed to send Telegram notification for event ${event.eventId}: ${error.message}`);
+    }
   }
 
   private getBot(): Bot {
@@ -56,25 +61,26 @@ export class TelegramService {
   private formatMessage(event: NotificationEventMessage): string {
     const payload =
       Object.keys(event.payload).length > 0
-        ? `\nPayload: <code>${escapeTelegramHtml(JSON.stringify(event.payload))}</code>`
+        ? `\nPayload: <code>${this.#escapeTelegramHtml(JSON.stringify(event.payload))}</code>`
         : '';
 
     return [
-      `<b>${escapeTelegramHtml(event.type)}</b>`,
-      `Event: <code>${escapeTelegramHtml(event.eventId)}</code>`,
-      `Occurred at: ${escapeTelegramHtml(event.occurredAt)}`,
+      `<b>${this.#escapeTelegramHtml(event.type)}</b>`,
+      `Event: <code>${this.#escapeTelegramHtml(event.eventId)}</code>`,
+      `Occurred at: ${this.#escapeTelegramHtml(event.occurredAt)}`,
       '',
-      escapeTelegramHtml(event.message),
+      this.#escapeTelegramHtml(event.message),
       payload,
     ]
       .filter((line) => line !== '')
       .join('\n');
   }
+  
+  #escapeTelegramHtml(value: string): string {
+    return value
+      .replaceAll('&', '&amp;')
+      .replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;');
+  }
 }
 
-function escapeTelegramHtml(value: string): string {
-  return value
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;');
-}

@@ -10,14 +10,14 @@ import {
 } from 'class-validator';
 
 export class CreateNotificationEventDto {
-  @ApiPropertyOptional({
-    description:
-      'Optional idempotency key. If omitted, the API generates UUID.',
-    example: 'c0f8f9aa-2e26-4df3-a31d-14ea4bd72917',
-  })
-  @IsOptional()
-  @IsUUID('4')
-  eventId?: string;
+  // @ApiPropertyOptional({
+  //   description:
+  //     'Optional idempotency key. If omitted, the API generates UUID.',
+  //   example: 'c0f8f9aa-2e26-4df3-a31d-14ea4bd72917',
+  // })
+  // @IsOptional()
+  // @IsUUID('4')
+  // eventId?: string;
 
   @ApiProperty({
     description: 'Business event type.',
